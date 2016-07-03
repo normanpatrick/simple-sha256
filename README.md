@@ -4,7 +4,9 @@ embedded or otherwise.
 
 This is a very minimalistic implementation of SHA256. One caveat, supported data
 length is limited to 2^32 bits (as apposed to 2^64 bits). It's easy to fix but
-I haven't had a need for it.
+I haven't had a need for it. The other gotcha is that there are little to big
+endian conversions that you need to be aware of, if porting to a new core
+architecture.
 
 Only testing so far has been with NIST test vectors.
 

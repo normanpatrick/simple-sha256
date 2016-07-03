@@ -137,6 +137,7 @@ int sha2_exec(u32* Hi, u8* data, int len) {
     int i;
     u8 tempdata[64];
     int remainder = len;
+    u32* inverted = (u32*)Hi;
 
     // assume all buffere are right size(!)
     if(!Hi || !data || (len <= 0)) {
@@ -168,6 +169,11 @@ int sha2_exec(u32* Hi, u8* data, int len) {
         tempdata[i] = (len << 3) >> (24 - ((i - PADBASE_INDEX)*8));
     }
     sha2_op(Hi, tempdata);
+
+    // turn everything back to big-endian
+    for(i=0; i < 8; i++) {
+        inverted[i] = INV32(inverted[i]);
+    }
     return ERROR_MSHA2_SUCCESS;
 }
 
@@ -194,13 +200,28 @@ int main(int argc, char* argv[]) {
     (void)abc; (void)_2blocks;
     memset(space, 0, sizeof(space));
 
+    // step1 - initialize
     sha2_init(hash);
 
-    //strcpy((char*)space, abc);
-    //sha2_exec(hash, space, BYTECOUNT(abc));
+    // strcpy((char*)space, abc);
+    // sha2_exec(hash, space, BYTECOUNT(abc));
+    // return 0;
 
     strcpy((char*)space, _2blocks);
+    // step2 - SHA256 operation
     sha2_exec(hash, space, BYTECOUNT(_2blocks));
+
+    // try another round?
+    u8 round2[32];
+
+    memcpy(round2, hash, 32);
+
+    // step1 - initialize
+    sha2_init(hash);
+    // step2 - SHA256 operation
+    sha2_exec(hash, round2, 32);
     return 0;
 }
+
+
 #endif
