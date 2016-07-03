@@ -39,6 +39,14 @@
     } while(0)
 #endif
 
+#define CHECK_RC(_y)                                    \
+    do {                                                \
+        int _x = (_y);                                  \
+        if((_x)) {                                      \
+            return (_x);                                \
+        }                                               \
+} while(0)
+
 #define PADBASE_INDEX (448 / 8)
 #define RTR(a,b) (((a) >> (b)) | ((a) << (32-(b))))
 
@@ -186,6 +194,19 @@ int sha2_init(u32* hash) {
     return ERROR_MSHA2_SUCCESS;
 }
 
+int sha2_double_round(u32* Hi, u8* data, int len) {
+    u8 round2[32];
+
+    CHECK_RC(sha2_init(Hi));
+    CHECK_RC(sha2_exec(Hi, data, len));
+
+    // secound round
+    memcpy(round2, Hi, 32);
+    CHECK_RC(sha2_init(Hi));
+    CHECK_RC(sha2_exec(Hi, round2, 32));
+    return ERROR_MSHA2_SUCCESS;
+}
+
 #ifdef _TESTMAIN
 
 #define BYTECOUNT(_x) (sizeof(_x) - 1)
@@ -208,18 +229,10 @@ int main(int argc, char* argv[]) {
     // return 0;
 
     strcpy((char*)space, _2blocks);
+    // return sha2_double_round(hash, space, BYTECOUNT(_2blocks));
+
     // step2 - SHA256 operation
     sha2_exec(hash, space, BYTECOUNT(_2blocks));
-
-    // try another round?
-    u8 round2[32];
-
-    memcpy(round2, hash, 32);
-
-    // step1 - initialize
-    sha2_init(hash);
-    // step2 - SHA256 operation
-    sha2_exec(hash, round2, 32);
     return 0;
 }
 

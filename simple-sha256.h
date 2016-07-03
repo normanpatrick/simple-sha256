@@ -31,7 +31,7 @@ extern "C" {
 
     int sha2_init(u32* hash);
     int sha2_exec(u32* Hi, u8* data, int len);
-
+    int sha2_double_round(u32* Hi, u8* data, int len);
 
 #ifdef __cplusplus
 }
