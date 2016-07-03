@@ -8,10 +8,12 @@ I haven't had a need for it.
 
 Only testing so far has been with NIST test vectors.
 
-## Details
-Here are a few documents describing the algorithm.
-1. http://www.iwar.org.uk/comsec/resources/cipher/sha256-384-512.pdf
-1. http://www-ma2.upc.es/~cripto/Q2-06-07/SHA256english.pdf
+## Requirements
+* First, a few documents describing the algorithm can be found
+[here](http://www.iwar.org.uk/comsec/resources/cipher/sha256-384-512.pdf) and
+[here](http://www-ma2.upc.es/~cripto/Q2-06-07/SHA256english.pdf).
+
+* For compilation a plain vanilla **gcc** works. No dependency or libraries need.
 
 ## Usage
 
